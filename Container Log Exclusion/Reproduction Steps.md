@@ -46,6 +46,21 @@ You will know the helm chart has been successfully installed and the agent deplo
 
 *Note:* Two pods beginning with "datadog" should be deployed, with one being the Cluster Agent. BOTH should have a `Running` status and should have matching paired numbers under the "Ready" column. 
 
+***GREAT! You have deployed the Node and Cluster Agents to your environment!***
+
 5
 ---
+
+Download the `busybox.yaml` file, ideally placing it in the same directory as your `dd-agent_default.yaml` file. Run the following command to deploy the applications to K8s: 
+
+```
+kubectl apply -f busybox.yaml
+```
+Next, run the `kubectl get pods` command and you should see a new pod appear:
+
+![image](https://user-images.githubusercontent.com/60328238/198740903-87fcd34e-9572-4d18-8edf-6372225029d6.png)
+
+*Note:* Do not proceed until the new pod has a `Running` status and has matching paired numbers under the "Ready" column similar to the Agent pods. 
+
+
 
