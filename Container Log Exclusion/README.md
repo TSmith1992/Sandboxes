@@ -15,8 +15,9 @@ This is distinct from the practice of excluding/including certain logs from cert
 ```
 https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=configurationfile#pagetitle
 ```
+![Advanced Log Collection 2022-10-28 at 2 34 59 PM](https://user-images.githubusercontent.com/60328238/198711744-ad91a93b-d2fe-4c20-bf1e-1b859ccc9ad9.jpg)
 
-Advanced Log Collection 2022-10-28 at 2.34.59 PM.jpg
+
 
 
 Prerequisites
