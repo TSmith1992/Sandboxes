@@ -83,3 +83,12 @@ api-key:  32 bytes
 
 This resulting Data should be an api-key containing 32 bytes representing the 32 characters of your API Key. If this does not line up `kubectl delete secret datadog-agent` and double check the command you ran.
 
+Important Links
+====
+
+- K8s Installation Steps (Helm) ***Ensure Logs are enabled*** => https://docs.datadoghq.com/containers/kubernetes/installation/?tab=helm
+
+- Container Discovery Setup => https://docs.datadoghq.com/agent/guide/autodiscovery-management/?tab=containerizedagent#inclusion-and-exclusion-behavior
+
+- Environment Variable list (Where/How to input container images to exclude logs from) => https://docs.datadoghq.com/containers/docker/?tab=standard#environment-variables
+
