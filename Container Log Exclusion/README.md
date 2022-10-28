@@ -8,7 +8,9 @@ To understand and replicate the process of excluding logs from certain container
 ```
 https://docs.datadoghq.com/agent/guide/autodiscovery-management/?tab=containerizedagent#pagetitle
 ```
-Container Discovery Management 2022-10-28 at 2.31.18 PM.jpg
+
+![Container Discovery Management 2022-10-28 at 2 31 18 PM](https://user-images.githubusercontent.com/60328238/198711855-f43d7ab1-cc91-40c2-a59d-d09b5e0c0bc1.jpg)
+
 
 This is distinct from the practice of excluding/including certain logs from certain containers, discussed in our Advanced Logging documentation:
 
@@ -16,8 +18,6 @@ This is distinct from the practice of excluding/including certain logs from cert
 https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=configurationfile#pagetitle
 ```
 ![Advanced Log Collection 2022-10-28 at 2 34 59 PM](https://user-images.githubusercontent.com/60328238/198711744-ad91a93b-d2fe-4c20-bf1e-1b859ccc9ad9.jpg)
-
-
 
 
 Prerequisites
