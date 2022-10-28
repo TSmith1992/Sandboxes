@@ -27,14 +27,19 @@ As a pre-requisite you should install Docker Desktop for Mac, as well as install
 
 Install Docker Desktop for Mac
 Install command line tools with brew
+
+```
 brew install minikube
 brew install kubernetes-cli
 brew install helm
 Add the Datadog Helm Repository
 helm repo add datadog https://helm.datadoghq.com
 helm repo update
+```
+
 Once this is installed run minikube start to initialize your Minikube Kubernetes Cluster. The default parameters of this should be sufficient. Once this is ready you can run the following to validate the setup is ready.
 
+```
 $ minikube status
 minikube
 type: Control Plane
@@ -42,6 +47,7 @@ host: Running
 kubelet: Running
 apiserver: Running
 kubeconfig: Configured
+```
 
 
 Setting up API Key
@@ -49,17 +55,25 @@ Setting up API Key
 
 The following sessions provide a Datadog Agent configuration via Helm. These samples reference a pre-existing Secret storing your Datadog API Key. To create this you can run the following with respect to one of your API Keys:
 
+```
 kubectl create secret generic datadog-agent --from-literal='api-key=<API_KEY>'
+```
+
 Example:
 
+```
 kubectl create secret generic datadog-agent --from-literal='api-key=abcdabcdabcdabcdabcdabcdabcdabcd'
+```
+
 When running this please make sure you swap in your api key correctly. You can validate that your API Key exists correctly by running:
 
+```
 $ kubectl describe secret datadog-agent
 Name:         datadog-agent
 Namespace:    default
 Labels:       <none>
 Annotations:  <none>
+```
 
 Type:  Opaque
 
