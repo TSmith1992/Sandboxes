@@ -1,0 +1,42 @@
+# Example busybox container outputting custom logs
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base-busybox
+  labels:
+    app: custom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: custom
+  template:
+    metadata:
+      labels:
+        app: custom
+    spec:
+      containers:
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: my-container
+        image: busybox
+        imagePullPolicy: Always
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 5; 
+          echo `date '+%FT%T'` example stdout log; 
+          echo `date '+%FT%T'` example stderr log 1>&2;
+        done;"
+        ]
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: my-container1
+        image: busybox
+        imagePullPolicy: Always
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 5; 
+          echo `date '+%FT%T'` example stdout logfrommmm; 
+          echo `date '+%FT%T'` example stderr logfrommmm 1>&2;
+        done;"
+        ]
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: random-test-logging
+        image: chentex/random-logger
+        imagePullPolicy: Always
