@@ -98,4 +98,47 @@ Check your logs page to confirm that the containers emitting logs from the `busy
         image: chentex/random-logger
         imagePullPolicy: Always
 ```
+Note: You are also free to change the log phrases, but ensure that those logs appear on your Logs page. 
 
+7
+---
+
+Reviewing our documentation, you may exclude containers from the Agent Autodiscovery perimeter with an exclude rule based on their `name`, `image`, or `kube_namespace` to collect ***NO DATA*** from these containers. If a container matches an exclude rule, it is not included unless it first matches an include rule. To continue, we can also exclude certain *behaviors* from a container, and not the entire container itself. We will illustrate this now by excluding **logs from certain containers**
+
+![image](https://user-images.githubusercontent.com/60328238/201407644-103284be-7508-4ac5-8a70-7f2ec2544c10.png)
+
+Following the image above, we will update our values.yaml file to exclude one (1) of the logs containers from having their logs appear on the platform
+
+```
+  env:
+    - name: DD_CONTAINER_EXCLUDE
+      value: "image:chentex/random-logger"
+```
+After adding the above in your helm chart, save your file and apply the changes via uninstalling and reinstalling your helm chart:
+
+`helm uninstall <RELEASE-NAME>`
+
+`helm install <RELEASE-NAME> -f dd-agent_default.yaml datadog/datadog --set targetSystem=<TARGET-SYSTEM>`
+
+8
+---
+
+Run `kubectl get pods` to ensure that your busybox deployment, Node, and Cluster Agents are running in your environment:
+
+![image](https://user-images.githubusercontent.com/60328238/201409584-31bce230-8f3d-4c4a-840d-27b519f28a6b.png)
+
+Now, notice that in our example we are trying to exclude logs from the `chentex/random-logger` container. Let's go to our log page and filter by facet to only see `service:random-logger` logs: 
+
+![image](https://user-images.githubusercontent.com/60328238/201409976-b4dbf92e-9a09-44d8-a952-f48978542cf6.png)
+
+We see that these particular logs stopped after a certain point. Good sign! Let's filter by another container in the `busybox` deployment file (like `service:busybox`):
+
+![image](https://user-images.githubusercontent.com/60328238/201410287-8e312088-9d38-453f-863e-c09c482f6cbd.png)
+
+We see that *these* logs are still coming, meaning we've sucessfully excluded logs from a certain container :)
+
+To revert to receiving **all** logs again, simply comment out the exclusion configuration in your values.yaml file and redeploy the Agent. Similar steps can be taken if one would like to exclude other things from containers, such as their metrics. 
+
+
+
+  env:
