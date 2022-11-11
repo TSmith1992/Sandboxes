@@ -62,5 +62,40 @@ Next, run the `kubectl get pods` command and you should see a new pod appear:
 
 *Note:* Do not proceed until the new pod has a `Running` status and has matching paired numbers under the "Ready" column similar to the Agent pods. 
 
+6
+---
+Check your logs page to confirm that the containers emitting logs from the `busybox.yaml` deployment. A great "tell" is looking for the logs containing the word "cookies," as one of the containers has logs that will be emitting logs with this word present: 
 
+![image](https://user-images.githubusercontent.com/60328238/201404254-857a52ea-025d-478d-93bc-bce51f1ef339.png)
+
+
+***From the yaml file:***
+```
+    spec:
+      containers:
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: my-container
+        image: busybox
+        imagePullPolicy: Always
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 5; 
+          echo `date '+%FT%T'` example stdout log; 
+          echo `date '+%FT%T'` example stderr log 1>&2;
+        done;"
+        ]
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: my-container1
+        image: busybox
+        imagePullPolicy: Always
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 5; 
+          echo `date '+%FT%T'` I like cookies and milk on Thursdays; 
+          echo `date '+%FT%T'` But only if I have chocolate and bonbons on Fridays;
+        done;"
+        ]
+      # Container named "my-container" outputting logs every 5 seconds
+      - name: random-test-logging
+        image: chentex/random-logger
+        imagePullPolicy: Always
+```
 
