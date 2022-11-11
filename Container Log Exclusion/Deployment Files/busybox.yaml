@@ -32,8 +32,8 @@ spec:
         imagePullPolicy: Always
         command: [ "/bin/sh", "-c", "--" ]
         args: [ "while true; do sleep 5; 
-          echo `date '+%FT%T'` example stdout logfrommmm; 
-          echo `date '+%FT%T'` example stderr logfrommmm 1>&2;
+          echo `date '+%FT%T'` I like cookies and milk on Thursdays; 
+          echo `date '+%FT%T'` But only if I have chocolate and bonbons on Fridays;
         done;"
         ]
       # Container named "my-container" outputting logs every 5 seconds
