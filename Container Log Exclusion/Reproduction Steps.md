@@ -138,7 +138,3 @@ We see that these particular logs stopped after a certain point. Good sign! Let'
 We see that *these* logs are still coming, meaning we've sucessfully excluded logs from a certain container :)
 
 To revert to receiving **all** logs again, simply comment out the exclusion configuration in your values.yaml file and redeploy the Agent. Similar steps can be taken if one would like to exclude other things from containers, such as their metrics. 
-
-
-
-  env:
