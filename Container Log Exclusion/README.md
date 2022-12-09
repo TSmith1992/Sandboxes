@@ -94,28 +94,28 @@ This resulting Data should be an api-key containing 32 bytes representing the 32
 # <h1> *** Reproduction Steps ***
 </h1>
 
-1
+1 - Configuring Your Helm Chart Deployment
 ---
 
 For this exercise, we will be using the Helm chart deplomyent method.  
 
-Use the Datadog `values.yaml` file (found in this repo as `dd-agent_default.yaml`) and be sure to add your API key as the value for `apiKey`:
+Use the Datadog `values.yaml` file (found in this repo) and be sure to add `datadog-agent` as the value for `apiKeyExistingSecret`:
 
-![image](https://user-images.githubusercontent.com/60328238/198735437-29476e19-65b6-43a3-92f3-00095e6b8da6.png)
+![image](https://user-images.githubusercontent.com/60328238/206782118-1046016c-76df-4245-957b-ff9d57432025.png)
 
 After, make sure that log collection is enabled and that the `containerCollectAll:` value is set to `true`: 
 
-![image](https://user-images.githubusercontent.com/60328238/198735794-140677a8-072d-4815-a995-e108449c2d35.png)
+![image](https://user-images.githubusercontent.com/60328238/206782320-12f12b44-1d01-4c72-b070-357b69feef75.png)
 
 Save this file.
 
-2
+2 - Start Minikube
 ---
 Spin up your cluster environment. In this exercise, we are using minikube. As such, run the command `minikube start` in your terminal. After a few moments, you should receive a message outlining that the minikube cluster is now ready for use:
 
 `Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default`
 
-3
+3 - Add/Update Helm Chart
 ---
 
 In your terminal, ensure that the you have the datadog helm repository added and up to date: 
@@ -125,13 +125,15 @@ helm repo add datadog https://helm.datadoghq.com
 helm repo update
 ```
 
-4
+4 - Install the Datadog Agent
 ---
-***In the same path where you saved your `dd-agent_default.yaml`***, run the following command:
+***In the same path where you saved your `values.yaml`***, run the following command:
+
 
 ```
 helm install <RELEASE_NAME> -f dd-agent_default.yaml datadog/datadog --set targetSystem=<TARGET_SYSTEM>
 ```
+
 *Note:* Replace `<RELEASE_NAME>` and `<TARGET_SYSTEM>` with the release name of the deployment (ex: `datadog-agent`) and the name of your OS (ex: `linux` or `windows`)m respectively. 
 
 You will know the helm chart has been successfully installed and the agent deployed by waiting a moment and running the command `kubectl get pods`, the command to see the number of pods running in your environment and their statuses, similar to below: 
@@ -142,13 +144,13 @@ You will know the helm chart has been successfully installed and the agent deplo
 
 ***GREAT! You have deployed the Node and Cluster Agents to your environment!***
 
-5
+5 - Deploy the Log Containers
 ---
 
-Download the `busybox.yaml` file, ideally placing it in the same directory as your `dd-agent_default.yaml` file. Run the following command to deploy the applications to K8s: 
+Download the `loggers.yaml` file, ideally placing it in the same directory as your `dd-agent_default.yaml` file. Run the following command to deploy the applications to K8s: 
 
 ```
-kubectl apply -f busybox.yaml
+kubectl apply -f loggers.yaml
 ```
 Next, run the `kubectl get pods` command and you should see a new pod appear:
 
@@ -156,19 +158,18 @@ Next, run the `kubectl get pods` command and you should see a new pod appear:
 
 *Note:* Do not proceed until the new pod has a `Running` status and has matching paired numbers under the "Ready" column similar to the Agent pods. 
 
-6
+6 - Confirm Container Logs are Appearing 
 ---
 Check your logs page to confirm that the containers emitting logs from the `busybox.yaml` deployment. A great "tell" is looking for the logs containing the word "cookies," as one of the containers has logs that will be emitting logs with this word present: 
 
-![image](https://user-images.githubusercontent.com/60328238/201404254-857a52ea-025d-478d-93bc-bce51f1ef339.png)
-
+![image](https://user-images.githubusercontent.com/60328238/206784546-f5220e91-ac92-4e00-8070-bfd61846efff.png)
 
 ***From the yaml file:***
 ```
     spec:
       containers:
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: my-container
+      # Container named "example-logger" outputting date-related logs every 5 seconds
+      - name: example-logger
         image: busybox
         imagePullPolicy: Always
         command: [ "/bin/sh", "-c", "--" ]
@@ -177,8 +178,8 @@ Check your logs page to confirm that the containers emitting logs from the `busy
           echo `date '+%FT%T'` example stderr log 1>&2;
         done;"
         ]
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: my-container1
+      # Container named "yummy-logger" outputting hunger-inducing logs every 5 seconds
+      - name: yummy-logger
         image: busybox
         imagePullPolicy: Always
         command: [ "/bin/sh", "-c", "--" ]
@@ -187,14 +188,15 @@ Check your logs page to confirm that the containers emitting logs from the `busy
           echo `date '+%FT%T'` But only if I have chocolate and bonbons on Fridays;
         done;"
         ]
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: random-test-logging
+      # Container named "random-logger" outputting logs every 5 seconds
+      - name: random-logger
         image: chentex/random-logger
         imagePullPolicy: Always
 ```
+
 Note: You are also free to change the log phrases, but ensure that those logs appear on your Logs page. 
 
-7
+7 - Implement Container Exclusion 
 ---
 
 Reviewing our documentation, you may exclude containers from the Agent Autodiscovery perimeter with an exclude rule based on their `name`, `image`, or `kube_namespace` to collect ***NO DATA*** from these containers. If a container matches an exclude rule, it is not included unless it first matches an include rule. To continue, we can also exclude certain *behaviors* from a container, and not the entire container itself. We will illustrate this now by excluding **logs from certain containers**
@@ -208,31 +210,64 @@ Following the image above, we will update our values.yaml file to exclude one (1
     - name: DD_CONTAINER_EXCLUDE
       value: "image:chentex/random-logger"
 ```
-After adding the above in your helm chart, save your file and apply the changes via uninstalling and reinstalling your helm chart:
 
-`helm uninstall <RELEASE-NAME>`
+The full values.yaml file...
 
-`helm install <RELEASE-NAME> -f dd-agent_default.yaml datadog/datadog --set targetSystem=<TARGET-SYSTEM>`
+```
+targetSystem: "linux"
+datadog:
+  apiKeyExistingSecret: datadog-agent
+  logLevel: DEBUG
+  processAgent:
+    enabled: false
+  kubelet:
+    tlsVerify: false
+  kubeStateMetricsEnabled: false
+  logs:
+    enabled: true
+    containerCollectAll: true
+  env:
+  - name: DD_CONTAINER_EXCLUDE
+    value: "image:chentex/random-logger"
+```
 
-8
+After adding the above in your helm chart, save your file and apply the changes by upgrading your helm chart:
+
+`helm upgrade <RELEASE-NAME> -f values.yaml datadog/datadog --set targetSystem=<TARGET-SYSTEM>`
+
+8 - Confirmation of Exclusion
 ---
 
 Run `kubectl get pods` to ensure that your busybox deployment, Node, and Cluster Agents are running in your environment:
 
-![image](https://user-images.githubusercontent.com/60328238/201409584-31bce230-8f3d-4c4a-840d-27b519f28a6b.png)
+![image](https://user-images.githubusercontent.com/60328238/206787591-3f07b177-6acf-431e-b9bb-a1608d84bcaa.png)
 
-Now, notice that in our example we are trying to exclude logs from the `chentex/random-logger` container. Let's go to our log page and filter by facet to only see `service:random-logger` logs: 
+Now, notice that in our example we are trying to exclude logs from the `chentex/random-logger` container. Let's go to our log page and filter by facet to only see `image_name:"chentex/random-logger"` logs: 
 
-![image](https://user-images.githubusercontent.com/60328238/201409976-b4dbf92e-9a09-44d8-a952-f48978542cf6.png)
+![image](https://user-images.githubusercontent.com/60328238/206786356-03ee33c2-4b0f-40ce-b5b2-7af20425ec7f.png)
 
-We see that these particular logs stopped after a certain point. Good sign! Let's filter by another container in the `busybox` deployment file (like `service:busybox`):
+We see that these particular logs stopped after a certain point. Good sign! Let's filter by another container in the `loggers` deployment file (like `service:busybox`):
 
-![image](https://user-images.githubusercontent.com/60328238/201410287-8e312088-9d38-453f-863e-c09c482f6cbd.png)
+![image](https://user-images.githubusercontent.com/60328238/206786793-fa4620a9-0037-4f02-abe1-c967d575e5a3.png)
 
 We see that *these* logs are still coming, meaning we've sucessfully excluded logs from a certain container :)
 
 To revert to receiving **all** logs again, simply comment out the exclusion configuration in your values.yaml file and redeploy the Agent. Similar steps can be taken if one would like to exclude other things from containers, such as their metrics. 
 
+9 - Removing / Uninstalling the Agent
+---
+
+To remove the Datadog Cluster and Node Agents, you can run the following command: 
+
+```
+helm uninstall datadog-agent
+```
+
+To remove the logger container deployment:
+
+```
+kubectl delete deployments loggers 
+```
 
 Important Links
 ====
