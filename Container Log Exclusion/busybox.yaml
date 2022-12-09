@@ -16,8 +16,8 @@ spec:
         app: custom
     spec:
       containers:
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: my-container
+      # Container named "example-logger" outputting date-related logs every 5 seconds
+      - name: example-logger
         image: busybox
         imagePullPolicy: Always
         command: [ "/bin/sh", "-c", "--" ]
@@ -26,8 +26,8 @@ spec:
           echo `date '+%FT%T'` example stderr log 1>&2;
         done;"
         ]
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: my-container1
+      # Container named "yummy-logger" outputting hunger-inducing logs every 5 seconds
+      - name: yummy-logger
         image: busybox
         imagePullPolicy: Always
         command: [ "/bin/sh", "-c", "--" ]
@@ -36,7 +36,7 @@ spec:
           echo `date '+%FT%T'` But only if I have chocolate and bonbons on Fridays;
         done;"
         ]
-      # Container named "my-container" outputting logs every 5 seconds
-      - name: random-test-logging
+      # Container named "random-logger" outputting logs every 5 seconds
+      - name: random-logger
         image: chentex/random-logger
         imagePullPolicy: Always
