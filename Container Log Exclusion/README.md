@@ -83,19 +83,10 @@ api-key:  32 bytes
 
 This resulting Data should be an api-key containing 32 bytes representing the 32 characters of your API Key. If this does not line up `kubectl delete secret datadog-agent` and double check the command you ran.
 
-Important Links
-====
-
-- K8s Installation Steps (Helm) ***Ensure Logs are enabled*** => https://docs.datadoghq.com/containers/kubernetes/installation/?tab=helm
-
-- Container Discovery Setup => https://docs.datadoghq.com/agent/guide/autodiscovery-management/?tab=containerizedagent#inclusion-and-exclusion-behavior
-
-- Environment Variable list (Where/How to input container images to exclude logs from) => https://docs.datadoghq.com/containers/docker/?tab=standard#environment-variables
 
 
-
-***** Reproduction Steps ***
-**
+# <h1> *** Reproduction Steps ***
+</h1>
 
 1
 ---
@@ -235,5 +226,16 @@ We see that these particular logs stopped after a certain point. Good sign! Let'
 We see that *these* logs are still coming, meaning we've sucessfully excluded logs from a certain container :)
 
 To revert to receiving **all** logs again, simply comment out the exclusion configuration in your values.yaml file and redeploy the Agent. Similar steps can be taken if one would like to exclude other things from containers, such as their metrics. 
+
+
+Important Links
+====
+
+- K8s Installation Steps (Helm) ***Ensure Logs are enabled*** => https://docs.datadoghq.com/containers/kubernetes/installation/?tab=helm
+
+- Container Discovery Setup => https://docs.datadoghq.com/agent/guide/autodiscovery-management/?tab=containerizedagent#inclusion-and-exclusion-behavior
+
+- Environment Variable list (Where/How to input container images to exclude logs from) => https://docs.datadoghq.com/containers/docker/?tab=standard#environment-variables
+
 
 
