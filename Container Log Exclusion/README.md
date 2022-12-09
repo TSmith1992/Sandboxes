@@ -17,6 +17,7 @@ This is distinct from the practice of excluding/including certain logs from cert
 ```
 https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=configurationfile#pagetitle
 ```
+
 ![Advanced Log Collection 2022-10-28 at 2 34 59 PM](https://user-images.githubusercontent.com/60328238/198711744-ad91a93b-d2fe-4c20-bf1e-1b859ccc9ad9.jpg)
 
 
@@ -25,14 +26,19 @@ Prerequisites
 
 As a pre-requisite you should install Docker Desktop for Mac, as well as install Minikube and Kubernetes tools needed.
 
-Install Docker Desktop for Mac
-Install command line tools with brew
+[Install Docker Desktop](https://www.docker.com/products/docker-desktop/)
+[Install command line tools with brew
+](https://brew.sh/)
 
 ```
 brew install minikube
 brew install kubernetes-cli
 brew install helm
+```
+
 Add the Datadog Helm Repository
+
+```
 helm repo add datadog https://helm.datadoghq.com
 helm repo update
 ```
@@ -81,7 +87,7 @@ Data
 ====
 api-key:  32 bytes
 
-This resulting Data should be an api-key containing 32 bytes representing the 32 characters of your API Key. If this does not line up `kubectl delete secret datadog-agent` and double check the command you ran.
+This resulting Data should be an api-key containing 32 bytes representing the 32 characters of your API Key. If this does not line up, run `kubectl delete secret datadog-agent` and double check the command you ran.
 
 
 
